@@ -1,0 +1,350 @@
+
+Шаблоны:
+	
+    template<typename KeyType, typename LessComp = std::less<KeyType>>                                                              |
+    class TreeSet;                                                                                                                  |     
+                                                                                                                                    |      TreeSet.h
+    template<typename KeyType, typename LessComp = std::less<KeyType>>                                                              |    
+    class TreeMultiSet;                                                                                                             |
+                                                                                                                                    |    ---------------
+    template<typename KeyType, typename ValueType, typename LessComp = std::less<KeyType>>                                          |
+    class TreeMap;                                                                                                                  |      TreeMap.h
+                                                                                                                                    |
+    template<typename KeyType, typename ValueType, typename LessComp = std::less<KeyType>>                                          |
+    class TreeMultiMap;                                                                                                             |
+
+
+Public Types:
+	
+	typename KeyType
+	typename ValueType(Только для TreeMap и TreeMultiMap)
+	typename PairType(Tолько для TreeMap и TreeMultiMap)
+	typename LessCompType
+	typename IteratorType
+	typename ConstIteratorType(Только для TreeMap и TreeMultiMap)
+
+
+Public Методы:
+
+    (constructor)                    -                  Создает и инициализирует текущий экземпляр
+    (destructor)                     -                  Уничтожает текущий экземпляр
+
+    Свойства_______________________________________________________________________________________________________
+
+    size                             -                  Возвращает текущее количество элементов в контейнере
+    isEmpty                          -                  Проверяет пустой ли контейнер
+   
+    Поиск__________________________________________________________________________________________________________
+
+    find                             -                  Ищет элемент с конкретным ключом
+    contains                         -                  Проверяет есть ли в контейнере элемент с конкретным ключом
+    countByKey                       -                  Возвращает количество элементов с конкретным ключом
+    equalRange                       -                  Возвращает диапазон элементов с конкретным ключом
+    lowerBound                       -                  Возвращает итератор на первый элемент с ключом не меньше конкретного
+    upperBound                       -                  Возвращает итератор на первый элемент с ключом больше конкретного
+
+    Вставка________________________________________________________________________________________________________
+
+    insert                           -                  Вставляет новый элемент(-ы) в контейнер
+
+    Удаление_______________________________________________________________________________________________________
+
+    erase                            -                  Удаляет элемент(-ы) из контейнера
+    eraseEqual                       -                  Удаляет все элементы с конкретным ключом
+
+    Модификация____________________________________________________________________________________________________
+
+    clear                            -                  Очищает контент контейнера
+    swap                             -                  Свапает контент двух контейнеров
+    merge                            -                  Перемещает элементы из другого контейнера
+
+    Итерирование___________________________________________________________________________________________________
+
+    beforeBegin(cbeforeBegin)        -                  Возвращает итератор на фиктивный элемент перед begin
+    begin(cbegin)                    -                  Возвращает итератор на первый элемент контейнера
+    back(cback)                      -                  Возвращает итератор на последний элемент контейнера
+    end(cend)                        -                  Возвращает итератор на фиктивный элемент после back
+
+
+
+
+*Далее Tree - псевдоним для конкретного имени контейнера, например, TreeMap
+
+Tree<...>::Tree____________________________________________________________________________________________________
+    
+    (InsertType - псевдоним для типа хранимой информации, для Set-ов это KeyType, для Map-ов PairType)
+
+    1. Tree()
+
+    2. Tree(std::initializer_list<InsertType> _initList)
+    
+    template<typename InputIterator>
+    3. Tree(InputIterator _first, InputIterator _last)
+
+    4. Tree(const Tree& _other)
+
+    5. Tree(Tree&& _other)
+
+
+    1: Создает пустой контейнер
+    2: Создает контейнер, содержащий допустимые элементы из списка инициализации(повторяющиеся элементы 
+    будут проигнорированы non-multi контейнером)
+    3: Создает контейнер, содержащий допустимые элементы из дипазона итераторов(повторяющиеся элементы 
+    будут проигнорированы non-multi контейнером). При разыменовывании, итератор должен давать InsertType данные
+    4: Конструктор копирования, создает контейнер содержащий те же элементы, что и _other
+    5: Конструктор перемещения, создает контейнер и перемещает в него все элементы из _other
+
+
+Tree<...>::size____________________________________________________________________________________________________
+
+    1. size_t size() const noexcept
+
+    1: Возвращает текущее количество элементов в контейнере
+
+
+Tree<...>::isEmpty_________________________________________________________________________________________________
+
+    1. bool isEmpty() const noexcept
+
+    1: Возвращает true если контейнер пуст, в противном случае возвращает false
+
+
+Tree<...>::find____________________________________________________________________________________________________
+
+   TreeSet и TreeMultiSet__________________________________________________________________________________________
+
+   1.1 IteratorType find(const KeyType& _key) const noexcept
+
+   TreeMap и TreeMultiMap__________________________________________________________________________________________
+
+   2.1 IteratorType find(const KeyType& _key) noexcept
+
+   2.2 ConstIteratorType find(const KeyType& _key) const noexcept
+
+
+   1.1 - 2.2: Ищет в контейнере элемент с ключом эквивалентным _key, в случае успеха возвращает итератор на найденный элемент.
+   В противном случае возвращает end() 
+
+
+Tree<...>::contains________________________________________________________________________________________________
+
+   1. bool contains(const KeyType& _key) const noexcept
+
+   1: Проверяет есть ли в контейнере элемент с ключом эквивалентным _key, в случае успеха возвращает true, 
+   в противном случае false
+
+Tree<...>::countByKey______________________________________________________________________________________________
+
+   1. size_t countByKey(const KeyType& _key) const noexcept
+
+   1: Возвращает количество элементов с ключом эквивалентным _key
+
+Tree<...>::equalRange______________________________________________________________________________________________
+
+   TreeSet и TreeMultiSet__________________________________________________________________________________________
+
+   1.1 std::pair<IteratorType, IteratorType> equalRange(const KeyType& _key) const noexcept 
+
+   TreeMap и TreeMultiMap__________________________________________________________________________________________
+
+   2.1 std::pair<IteratorType, IteratorType> equalRange(const KeyType& _key) noexcept
+
+   2.2 std::pair<ConstIteratorType, ConstIteratorType> equalRange(const KeyType& _key) const noexcept
+
+
+   1.1 - 2.2: Возвращает пару итераторов на начало и конец диапазона элементов с ключом эквивалентным _key.
+   Если таких элементов нет, возвращает пару итераторов end()
+
+
+Tree<...>::lowerBound______________________________________________________________________________________________
+
+   TreeSet и TreeMultiSet__________________________________________________________________________________________
+
+   1.1 IteratorType lowerBound(const KeyType& _key) const noexcept
+
+   TreeMap и TreeMultiMap__________________________________________________________________________________________
+
+   2.1 IteratorType lowerBound(const KeyType& _key) noexcept
+
+   2.2 ConstIteratorType lowerBound(const KeyType& _key) const noexcept
+
+
+   1.1 - 2.2: Ищет первый элемент с ключом не меньше _key. В случае успеха возвращает итератор на него.
+   В противном случае возвращает end() 
+
+
+Tree<...>::upperBound______________________________________________________________________________________________
+
+   TreeSet и TreeMultiSet__________________________________________________________________________________________
+
+   1.1 IteratorType upperBound(const KeyType& _key) const noexcept
+
+   TreeMap и TreeMultiMap__________________________________________________________________________________________
+
+   2.1 IteratorType upperBound(const KeyType& _key) noexcept
+
+   2.2 ConstIteratorType upperBound(const KeyType& _key) const noexcept
+
+
+   1.1 - 2.2: Ищет первый элемент с ключом больше _key. В случае успеха возвращает итератор на него.
+   В противном случае возвращает end()
+
+Tree<...>::insert__________________________________________________________________________________________________
+
+   TreeSet и TreeMultiSet__________________________________________________________________________________________
+
+   1.1 IteratorType insert(const KeyType& _key)
+
+   1.2 IteratorType insert(KeyType&& _key)
+
+   1.3 void insert(std::initializer_list<KeyType> _initList)
+   
+   template<typename InputIterator>
+   1.4 void insert(InputIterator _first, InputIterator _last)
+
+   TreeMap и TreeMultiMap_________________________________________________________________________________________
+
+   2.1 IteratorType insert(const KeyType& _key, const ValueType& _value)
+
+   2.2 IteratorType insert(KeyType&& _key, const ValueType& _value)
+
+   2.3 IteratorType insert(const KeyType& _key, ValueType&& _value)
+
+   2.4 IteratorType insert(KeyType&& _key, ValueType&& _value)
+
+   2.5 IteratorType insert(const std::pair<KeyType, ValueType>& _pair)
+
+   2.6 IteratorType insert(std::pair<KeyType, ValueType>&& _pair)
+
+   2.7 void insert(std::initializer_list<std::pair<KeyType, ValueType>> _initList)
+
+   template<typename InputIterator>
+   2.8 void insert(InputIterator _first, InputIterator _last)
+
+
+   1.1 - 1.2: Пытается добавить новый элемент в контейнер, примает параметры, как по const l-value, так и по r-value ссылкам.
+   2.1 - 2.6: В случае успешной вставки возвращает итератор на добавленный элемент, в противном случае возвращает end()
+
+   1.3 и 2.7: Пытается добавить элементы из списка инициализации, ничего не возвращает
+
+   1.4 и 2.8: Пытается добавить элементы из диапазона итераторов. При разыменовывании итераторы должны давать данные
+   KeyType для Set и PairType для Map. Ничего не возвращает
+
+
+Tree<...>::erase_____________________________________________________________________________________________
+
+   1.1 size_t erase(const KeyType& _key)
+
+   1.2 size_t erase(IteratorType _iter)
+
+   1.3 size_t erase(IteratorType _first, IteratorType _last)
+
+
+   1.1: Пытается удалить первый найденный элемент с ключом эквивалентным _key. В случае успеха возвращает 1,
+   в противном случае возвращает 0
+
+   1.2: Пытается удалить элемент по итератору. Если итератор не валиден, ничего не удаляет и возвращает 0.
+   В противном случае выполняет удаление и возвращает 1
+
+   1.3 Пытается удалить элементы из диапазона между двух итераторов. Если один из итератор не валиден или 
+   они принадлежат разным контейнерам(экземплярам), ничего не удаляет и возвращает 0. В противном случае
+   выполняет удаление и возвращает количество удаленных элементов
+
+
+Tree<...>::eraseEqual________________________________________________________________________________________
+
+   1. size_t eraseEqual(const KeyType& _key)
+
+   1: Пытается удалить все элементы с ключом эквивалентным _key. Возвращает количество удаленных элементов
+
+
+Tree<...>::clear_____________________________________________________________________________________________
+   
+   1. void clear()
+
+   1: Удаляет все элементы из контейнера
+
+
+Tree<...>::swap______________________________________________________________________________________________
+
+   1. void swap(Tree& _other) noexcept
+
+   1: Меняет местами содержимое текущего контейнера с _other
+
+
+Tree<...>::merge_____________________________________________________________________________________________
+
+   1. void merge(Tree& _source) noexcept
+
+   1: Перемещает элементы из _source в текущий контейнер
+
+
+Tree<...>::beforeBegin(cbeforeBegin)_________________________________________________________________________
+
+   TreeSet и TreeMultiSet_________________________________________________________________________________________
+
+   1.1 IteratorType beforeBegin() const noexcept
+
+   TreeMap и TreeMultiMap_________________________________________________________________________________________
+
+   2.1 IteratorType beforeBegin() noexcept
+
+   2.2 ConstIteratorType beforeBegin() const noexcept 
+
+   2.3 ConstIteratorType cbeforeBegin() const noexcept 
+
+
+   1.1 - 2.3: Возвращает итератор на фиктивный элемент перед begin()
+
+
+Tree<...>::begin(cbegin)_____________________________________________________________________________________
+
+   TreeSet и TreeMultiSet_________________________________________________________________________________________
+
+   1.1 IteratorType begin() const noexcept
+
+   TreeMap и TreeMultiMap_________________________________________________________________________________________
+
+   2.1 IteratorType begin() noexcept
+
+   2.2 ConstIteratorType begin() const noexcept 
+
+   2.3 ConstIteratorType cbegin() const noexcept 
+
+   
+   1.1 - 2.3: Возвращает итератор на первый элемент контейнера
+
+
+Tree<...>::back(cback)_______________________________________________________________________________________
+
+   TreeSet и TreeMultiSet_________________________________________________________________________________________
+
+   1.1 IteratorType back() const noexcept
+
+   TreeMap и TreeMultiMap_________________________________________________________________________________________
+
+   2.1 IteratorType back() noexcept
+
+   2.2 ConstIteratorType back() const noexcept 
+
+   2.3 ConstIteratorType cback() const noexcept
+
+   1.1 - 2.3: Возвращает итератор на последний элемент контейнера
+
+
+Tree<...>::end(cend)_________________________________________________________________________________________
+
+   TreeSet и TreeMultiSet_________________________________________________________________________________________
+
+   1.1 IteratorType end() const noexcept
+
+   TreeMap и TreeMultiMap_________________________________________________________________________________________
+
+   2.1 IteratorType end() noexcept
+
+   2.2 ConstIteratorType end() const noexcept 
+
+   2.3 ConstIteratorType cend() const noexcept
+
+   1.1 - 2.3: Возвращает итератор на фиктивный элемент после back() 
+
